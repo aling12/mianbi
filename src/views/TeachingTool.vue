@@ -343,8 +343,23 @@ export default {
     },
     //
     removeEl(index) {
-      const canvas = this.render(index)
-      canvas.remove(...this.selected)
+      ElMessageBox.confirm("确认删除吗?", {
+        type: "warning",
+      })
+        .then(() => {
+          const canvas = this.render(index)
+          canvas.remove(...this.selected)
+          ElMessage({
+            type: "success",
+            message: "删除成功",
+          });
+        })
+        .catch(() => {
+          ElMessage({
+            type: "info",
+            message: "删除取消",
+          });
+        });
     },
     back(i) {
       this.render(i).undo()
