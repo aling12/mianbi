@@ -55,7 +55,7 @@
 
         <div>
           <el-button @click="removeEl(index)">删除</el-button>
-          <el-button>退一步</el-button>
+          <el-button @click="back(index)">退一步</el-button>
           <el-button @click="clear(index)">清屏</el-button>
           <el-button @click="dialogVisible = true">重命名画板</el-button>
         </div>
@@ -86,6 +86,7 @@ import "element-plus/es/components/message-box/style/css";
 import "element-plus/es/components/message/style/css";
 import { fabric } from "fabric";
 import "fabric/src/mixins/eraser_brush.mixin.js";
+import 'fabric-history'
 import { markRaw } from "vue";
 
 export default {
@@ -344,6 +345,9 @@ export default {
     removeEl(index) {
       const canvas = this.render(index)
       canvas.remove(...this.selected)
+    },
+    back(i) {
+      this.render(i).undo()
     }
   },
   mounted() {
