@@ -55,24 +55,25 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="类型" width="70">
+      <el-table-column label="类型" >
         <template #default="{ row }">
           {{ typeText(row) }}
         </template>
       </el-table-column>
-      <el-table-column label="开始日期" width="120">
+      <el-table-column label="开始日期" w>
         <template #default="scope">
           {{ formatDate(scope.row.StartDate) }}
         </template>
       </el-table-column>
-      <el-table-column prop="grade" label="等级" width="80" />
-      <el-table-column prop="value" label="成长值" width="120" />
-      <el-table-column label="成就勋章" width="120">
+      <el-table-column prop="grade" label="等级"  />
+      <el-table-column prop="value" label="成长值"  />
+      <el-table-column label="成就勋章" >
         <template #default>
+          🚀✈️😭
           <!-- <span><img src="00FD9888.png" /></span> -->
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column width="190" label="操作">
         <template #default="scope">
           <el-button
             type="success"
