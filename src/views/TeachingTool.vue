@@ -39,6 +39,7 @@
           <el-radio-button label="eraser">橡皮擦</el-radio-button>
           <el-radio-button label="select">选择</el-radio-button>
           <el-radio-button label="rect">矩形</el-radio-button>
+          <el-radio-button label="text">文字</el-radio-button>
         </el-radio-group>
 
         <div>
@@ -54,7 +55,7 @@
 
         <div>
           <el-button @click="removeEl(index)">删除</el-button>
-          <el-button @click="retreat">退一步</el-button>
+          <el-button>退一步</el-button>
           <el-button @click="clear(index)">清屏</el-button>
           <el-button @click="dialogVisible = true">重命名画板</el-button>
         </div>
@@ -191,6 +192,9 @@ export default {
         canvas.isDrawingMode = false;
       } else if (val === "rect") {
         canvas.isDrawingMode = false;
+      } else if (val === "text") {
+        canvas.isDrawingMode = false;
+        canvas.skipTargetFind = false
       }
     },
     // handleDown(event) {
@@ -295,7 +299,25 @@ export default {
             startX = x
             startY = y
           }
+          if (this.mode === 'text') {
+            if (!e.target || !e.target.text) {
+              canvas.isDrawingMode = false
+              const { x, y } = e.absolutePointer
+              const text = new fabric.Textbox('', {
+                width: 300,
+                editable: true,
+                fill: this.linecolor,
+                top: y,
+                left: x,
+                height: 100,
+              })
+              canvas.add(text)
+              text.enterEditing()
+              canvas.setActiveObject(text)
+            }
+          }
         })
+
         canvas.on('mouse:up', e => {
           if (this.mode === 'rect') {
             const { x, y } = e.absolutePointer
@@ -309,7 +331,6 @@ export default {
             canvas.add(rect)
           }
         })
-        //把选中的目标，保存在date里，再去删除，加上markRaw，为了防止VUE修改，保持原样，Vue3才需要
 
         canvas.on('selection:created', e => {
           console.log(e);
@@ -317,7 +338,6 @@ export default {
         })
         canvas.on('selection:updated', e => this.selected = markRaw(e.selected))
       }
-
       return this.tableTabs[index].canvas;
     },
     //
@@ -343,6 +363,8 @@ export default {
 .btns {
   display: flex;
   justify-content: space-between;
+  margin-top: 5px;
+  flex-shrink: 0;
 }
 
 .form-btn {
