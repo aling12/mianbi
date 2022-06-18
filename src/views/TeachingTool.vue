@@ -6,33 +6,8 @@
     <el-tab-pane v-for="(item, index) in tableTabs" :key="item.id" :label="item.label" :name="item.id">
       <canvas class="canvas" :style="{ cursor: `url(${icons[mode]}) 10 10, auto` }" ref="canvas" :width="canvasWidth"
         height="500"></canvas>
-      <!-- <div class="btns">
-        <el-button @click="thickness(index)">画笔</el-button>
-        <el-button @click="eraser(index)">橡皮擦</el-button>
-        <el-button class="text">文字</el-button>
-        <el-color-picker class="color" v-model="linecolor" />
-        <el-button class="clear-screen" @click="clear(index)">清屏</el-button>
-        <el-select
-          class="select"
-          v-model="lineWidth"
-          style="width: 75px"
-          placeholder="粗细"
-          @change="thickness"
-        >
-          <el-option
-            v-for="(lineWidth, index) in lineWidths"
-            :label="lineWidth.label"
-            :value="lineWidth.value"
-            :key="index"
-          ></el-option>
-        </el-select>
-        <el-button @click="dialogVisible = true">重命名画板</el-button>
-      </div> -->
+
       <div class="btns">
-        <!-- <div>
-          <el-button @click="thickness(index)">画笔</el-button>
-          <el-button @click="eraser(index)">橡皮擦</el-button>
-        </div> -->
 
         <el-radio-group v-model="mode" @change="(val) => change(index, val)">
           <el-radio-button label="pen">画笔</el-radio-button>
