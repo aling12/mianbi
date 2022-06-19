@@ -28,8 +28,8 @@
         </div>
 
         <div>
+          <el-button @click="back(index)">撤销</el-button>
           <el-button @click="removeEl(index)">删除</el-button>
-          <el-button @click="back(index)">退一步</el-button>
           <el-button @click="clear(index)">清屏</el-button>
           <el-button @click="dialogVisible = true">重命名画板</el-button>
         </div>
@@ -98,7 +98,6 @@ export default {
       form: {
         filename: "",
       },
-      history: [],
     };
   },
   methods: {
@@ -222,13 +221,6 @@ export default {
           });
         });
     },
-    // eraser(idx) {
-    //   const canvas = this.$refs.canvas[idx];
-    //   const ctx = canvas.getContext("2d");
-    //   ctx.lineWidth = 80;
-    //   this.linecolor = "#ffffff";
-    //   this.mode = "eraser";
-    // },
     thickness(idx) {
       const canvas = this.render(idx);
       canvas.freeDrawingBrush.width = this.lineWidth;
@@ -315,12 +307,6 @@ export default {
             }
           }
         })
-
-        canvas.on('selection:created', e => {
-          console.log(e);
-          this.selected = markRaw(e.selected)
-        })
-        canvas.on('selection:updated', e => this.selected = markRaw(e.selected))
       }
       return this.tableTabs[index].canvas;
     },
@@ -331,7 +317,8 @@ export default {
       })
         .then(() => {
           const canvas = this.render(index)
-          canvas.remove(...this.selected)
+          const selected = canvas.getActiveObjects()
+          canvas.remove(...selected)
           ElMessage({
             type: "success",
             message: "删除成功",
