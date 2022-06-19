@@ -166,11 +166,14 @@ export default {
         canvas.freeDrawingBrush.width = 35;
       } else if (val === "select") {
         canvas.isDrawingMode = false;
+        fabric.Object.prototype.selectable = true
       } else if (val === "rect") {
         canvas.isDrawingMode = false;
+        fabric.Object.prototype.selectable = false
       } else if (val === "text") {
         canvas.isDrawingMode = false;
         canvas.skipTargetFind = false
+
       }
     },
     // handleDown(event) {
@@ -270,10 +273,10 @@ export default {
         let startX, startY
         canvas.on('mouse:down', e => {
           if (this.mode === 'rect') {
-            canvas.isDrawingMode = false
-            const { x, y } = e.absolutePointer
-            startX = x
-            startY = y
+            canvas.selectionColor = 'transparent'
+            canvas.selectionBorderColor = this.linecolor
+            startX = e.pointer.x
+            startY = e.pointer.y
           }
           if (this.mode === 'text') {
             if (!e.target || !e.target.text) {
@@ -296,15 +299,21 @@ export default {
 
         canvas.on('mouse:up', e => {
           if (this.mode === 'rect') {
-            const { x, y } = e.absolutePointer
-            const rect = new fabric.Rect({
-              fill: this.linecolor,
-              top: startY,
-              left: startX,
-              width: Math.abs(x - startX),
-              height: Math.abs(y - startY),
-            })
-            canvas.add(rect)
+            const { x: endX, y: endY } = e.pointer
+            const tempW = Math.abs(endX - startX)
+            const tempH = Math.abs(endY - startY)
+            if (tempW > 3 && tempH > 3) {
+              const rect = new fabric.Rect({
+                left: Math.min(startX, endX),
+                top: Math.min(startY, endY),
+                width: tempW - 3,
+                height: tempH - 3,
+                strokeWidth: 3,
+                stroke: this.linecolor,
+                fill: 'transparent',
+              })
+              canvas.add(rect)
+            }
           }
         })
 
