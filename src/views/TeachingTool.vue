@@ -18,14 +18,13 @@
         </el-radio-group>
 
         <div>
-          <template v-if="mode === 'pen'">
-            <el-color-picker v-model="linecolor" @change="handleColorChange(index)" />
-            <el-select class="select" v-model="lineWidth" style="width: 75px" placeholder="粗细"
-              @change="thickness(index)">
-              <el-option v-for="(lineWidth, index) in lineWidths" :label="lineWidth.label" :value="lineWidth.value"
-                :key="index"></el-option>
-            </el-select>
-          </template>
+          <el-color-picker v-if="['pen', 'rect', 'text'].includes(this.mode)" v-model="linecolor"
+            @change="handleColorChange(index)" />
+          <el-select v-if="mode === 'pen'" class="select" v-model="lineWidth" style="width: 75px" placeholder="粗细"
+            @change="thickness(index)">
+            <el-option v-for="(lineWidth, index) in lineWidths" :label="lineWidth.label" :value="lineWidth.value"
+              :key="index"></el-option>
+          </el-select>
         </div>
 
         <div>
@@ -286,7 +285,7 @@ export default {
                 width: 300,
                 editable: true,
                 fill: this.linecolor,
-                top: y,
+                top: y - 20,
                 left: x,
                 height: 100,
               })
