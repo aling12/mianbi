@@ -5,7 +5,7 @@
   <el-tabs ref="tabs" type="card" closable v-model="tableTabsValue" @tab-remove="removeTab">
     <el-tab-pane v-for="(item, index) in tableTabs" :key="item.id" :label="item.label" :name="item.id">
       <canvas class="canvas" :style="{ cursor: `url(${icons[mode]}) 10 10, auto` }" ref="canvas" :width="canvasWidth"
-        height="500"></canvas>
+        height="550"></canvas>
 
       <div class="btns">
 
@@ -171,7 +171,9 @@ export default {
       } else if (val === "text") {
         canvas.isDrawingMode = false;
         canvas.skipTargetFind = false
-
+      } else {
+        const Textboxes = canvas.getObjects('textbox')
+        Textboxes.forEach(box => box.exitEditing())
       }
     },
     // handleDown(event) {

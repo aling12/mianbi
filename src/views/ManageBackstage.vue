@@ -56,6 +56,7 @@
                 </el-icon>教学工具
               </template>
               <el-menu-item index="/board">白板</el-menu-item>
+              <el-menu-item index="/notes">笔记</el-menu-item>
             </el-sub-menu>
           </el-menu>
         </el-aside>
@@ -79,6 +80,8 @@ export default {
   },
   computed: {
     defaultOption() {
+      const { path } = this.$route
+      if (path.startsWith('/notes')) return '/notes'
       return this.$route.path;
     },
   },

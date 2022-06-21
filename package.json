@@ -9,12 +9,15 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.0.5",
+    "@wangeditor/editor-for-vue": "^5.1.11",
     "axios": "^0.27.2",
     "element-plus": "^2.2.4",
     "fabric": "^5.2.1",
     "fabric-history": "^1.6.0",
     "pinia": "^2.0.14",
+    "quill": "^1.3.7",
     "vue": "^3.2.36",
+    "vue-quill-editor": "^3.0.6",
     "vue-router": "^4.0.15"
   },
   "devDependencies": {
