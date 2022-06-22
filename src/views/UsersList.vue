@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="nav">
-      <el-select v-model="value" class="m-2" placeholder="Select">
+      <el-select v-model="query.type" class="m-2" placeholder="Select">
         <el-option value="" label="全部"></el-option>
         <el-option v-for="item in types" :key="item.value" :label="item.label" :value="item.value" />
       </el-select>
       <div class="block">
         <el-form-item label="开始时间">
-          <el-date-picker v-model="valueDate" type="datetime" placeholder="请选择查询时间" clearable />
+          <el-date-picker v-model="query.startDate" type="datetime" placeholder="请选择查询时间" clearable />
         </el-form-item>
       </div>
-      <el-button class="primary-btn" type="primary">查询</el-button>
+      <el-button @click="inquire" class="primary-btn" type="primary">查询</el-button>
     </div>
     <div class="addDel">
       <el-button @click="add">添加</el-button>
@@ -36,7 +36,7 @@
       </el-table-column>
       <el-table-column label="开始日期" w>
         <template #default="scope">
-          {{ formatDate(scope.row.StartDate) }}
+          {{ formatDate(scope.row.startDate) }}
         </template>
       </el-table-column>
       <el-table-column prop="grade" label="等级" />
@@ -55,7 +55,8 @@
       </el-table-column>
     </el-table>
     <div class="pagination">
-      <el-pagination v-model="users" background layout="prev, pager, next" :total="50" />
+      <el-pagination background layout="prev, pager, next" :total="total" v-model:current-page="query.page"
+        :page-size="query.perPage" @current-change="handleChangePageInfo" />
     </div>
 
     <el-dialog width="340px" v-model="dialogVisible" title="添加面壁者">
@@ -81,8 +82,8 @@
         <el-form-item prop="value" label="成长值">
           <el-input v-model="addition.value" placeholder="添加成长值" />
         </el-form-item> -->
-        <el-form-item prop="StartDate" label="开始时间">
-          <el-date-picker v-model="addition.StartDate" type="datetime" placeholder="请选择添加时间" clearable
+        <el-form-item prop="startDate" label="开始时间">
+          <el-date-picker v-model="addition.startDate" type="datetime" placeholder="请选择添加时间" clearable
             format="YYYY/MM/DD hh:mm:ss" />
         </el-form-item>
         <div class="form-btn">
@@ -102,8 +103,8 @@
         <el-form-item prop="name" label="面壁者">
           <el-input v-model="amend.name" placeholder="修改面壁者" />
         </el-form-item>
-        <el-form-item prop="StartDate" label="开始时间">
-          <el-date-picker v-model="amend.StartDate" type="datetime" placeholder="请选择查询时间" clearable
+        <el-form-item prop="startDate" label="开始时间">
+          <el-date-picker v-model="amend.startDate" type="datetime" placeholder="请选择查询时间" clearable
             format="YYYY/MM/DD hh:mm:ss" />
         </el-form-item>
         <!-- <el-form-item prop="type" label="类型">
@@ -144,6 +145,7 @@ import { getUsers, deleteUser, createUser, updateUser, batchUser } from "../api/
 export default {
   data() {
     return {
+      total: 0,
       items: [],
       dialogTableVisible: false,
       dialogVisible: false,
@@ -155,11 +157,11 @@ export default {
       ],
       types: [
         {
-          value: "线上",
+          value: 1,
           label: "线上",
         },
         {
-          value: "线下",
+          value: 2,
           label: "线下",
         },
       ],
@@ -181,7 +183,7 @@ export default {
         id: null,
         name: "",
         type: "",
-        StartDate: "",
+        startDate: "",
         grade: "",
         value: "",
       },
@@ -189,14 +191,14 @@ export default {
         nick: "",
         name: "",
         type: "",
-        StartDate: "",
+        startDate: "",
         grade: "",
         value: "",
       },
       rules: {
         nick: [{ required: true, message: "昵称不可为空", trigger: "blur" }],
         name: [{ required: true, message: "名字不可为空", trigger: "blur" }],
-        StartDate: [
+        startDate: [
           { required: true, message: "时间不可为空", trigger: "blur" },
         ],
         grade: [{ required: true, message: "等级不可为空", trigger: "blur" }],
@@ -207,7 +209,7 @@ export default {
         page: 1,
         perPage: 10,
         type: '',
-        StartDate: '',
+        startDate: '',
         q: '',
         sex: '',
       },
@@ -272,8 +274,8 @@ export default {
     formatDate(val) {
       const day = new Date(val);
       let year = day.getFullYear();
-      let month = day.getMonth() + 1;
-      let date = day.getDate();
+      let month = String(day.getMonth() + 1).padStart(2, '0');
+      let date = String(day.getDate()).padStart(2, '0');
       val = `${year}-${month}-${date}`;
       return val;
     },
@@ -290,7 +292,7 @@ export default {
         .then(async () => {
           const ids = this.items.map(item => item.id).join()
           await batchUser(ids)
-            this.getUsers();
+          this.getUsers();
           ElMessage({
             type: "success",
             message: "删除成功",
@@ -310,8 +312,17 @@ export default {
       return item.type === 1 ? "线上" : "线下";
     },
     async getUsers() {
-      const res = await getUsers()
-      this.users = res.data
+      const res = await getUsers(this.query)
+      this.users = res.data.data
+      this.total = res.data.total
+    },
+    handleChangePageInfo() {
+      this.getUsers();
+    },
+    async inquire() {
+      const startDate = this.query.startDate ? this.formatDate(this.query.startDate) : ''
+      const res = await getUsers({ ...this.query, startDate })
+      this.users = res.data.data
     }
   },
   computed: {

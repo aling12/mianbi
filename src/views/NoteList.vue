@@ -1,7 +1,9 @@
 <template>
-    <div>
+    <div class="nav-search">
         <el-button @click="noteCreate">添加</el-button>
         <el-button type="danger" :disabled="disable" @click="batchRemove">批量删除 </el-button>
+        <el-input v-model="query.q" class="ipt"></el-input>
+        <el-button type="primary" @click="inquire">查询</el-button>
     </div>
     <el-table empty-text="没有数据" @selection-change="handleSelectionChange" :data="minutes" table-layout="auto">
         <el-table-column type="selection" width="70"></el-table-column>
@@ -24,7 +26,8 @@
             </template>
         </el-table-column>
     </el-table>
-    <el-pagination style="margin-top: 5px;" background layout="->,prev, pager, next" :total="50" />
+    <el-pagination style="margin-top: 5px;" background layout="->,prev, pager, next" :total="total"
+        v-model:current-page="query.page" :page-size="query.perPage" @current-change="handleChangePageInfo" />
 </template>
 
 <script>
@@ -32,6 +35,7 @@ import { getNotes, deleteNote, batchNote, } from '../api/note'
 export default {
     data() {
         return {
+            total: 0,
             items: [],
             minutes: [
             ],
@@ -111,8 +115,16 @@ export default {
             return output;
         },
         async getNotes() {
-            const res = await getNotes()
-            this.minutes = res.data
+            const res = await getNotes(this.query)
+            this.minutes = res.data.data
+            this.total = res.data.total
+        },
+        handleChangePageInfo() {
+            this.getUsers();
+        },
+        async inquire() {
+            const res = await getNotes(this.query)
+            this.minutes = res.data.data
         }
     },
     created() {
@@ -121,5 +133,14 @@ export default {
 }
 </script>
 
+
 <style scoped>
+.nav-search {
+    display: flex;
+}
+
+.ipt {
+    width: 300px;
+    margin: 0px 10px;
+}
 </style>
