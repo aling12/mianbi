@@ -28,6 +28,8 @@
 import { Toolbar, Editor } from "@wangeditor/editor-for-vue";
 import '@wangeditor/editor/dist/css/style.css'
 import { shallowRef } from "vue";
+import { createNote } from '../api/note'
+
 
 export default {
     components: {
@@ -60,8 +62,9 @@ export default {
             this.editor = shallowRef(editor)
         },
         submit() {
-            this.$refs.form.validate((v) => {
+            this.$refs.form.validate(async (v) => {
                 if (v) {
+                    await createNote(this.note)
                     this.$router.push('/notes')
                 }
             })

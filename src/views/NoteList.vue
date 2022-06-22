@@ -28,14 +28,20 @@
 </template>
 
 <script>
+import { getNotes, deleteNote, batchNote, } from '../api/note'
 export default {
     data() {
         return {
             items: [],
             minutes: [
-                { id: 1, title: 'Vue3', content: '<h2>你好，世界！</h2><p>哈哈哈!</p><p><br></p>', visible: false },
-                { id: 2, title: 'Js', content: '<h2>今天学习了原型！</h2><p>哈哈哈!</p><p><br></p>', visible: true }
             ],
+            query: {
+                page: 1,
+                perPage: 10,
+                q: '',
+                title: '',
+                content: '',
+            },
         }
     },
     computed: {
@@ -51,11 +57,10 @@ export default {
             ElMessageBox.confirm("确认删除吗?", {
                 type: "warning",
             })
-                .then(() => {
-                    for (let item of this.items) {
-                        const idx = this.minutes.findIndex((minutes) => minutes.id === item.id);
-                        this.minutes.splice(idx, 1);
-                    }
+                .then(async () => {
+                    const ids = this.items.map(item => item.id).join()
+                    await batchNote(ids)
+                    this.getNotes();
                     ElMessage({
                         type: "success",
                         message: "删除成功",
@@ -81,9 +86,11 @@ export default {
             ElMessageBox.confirm("确认删除吗?", {
                 type: "warning",
             })
-                .then(() => {
-                    const idx = this.minutes.findIndex((minute) => minute.id === id);
-                    this.minutes.splice(idx, 1);
+                .then(async () => {
+                    // const idx = this.minutes.findIndex((minute) => minute.id === id);
+                    // deleteNote(idx)
+                    await deleteNote(id)
+                    this.getNotes()
                     ElMessage({
                         type: "success",
                         message: "删除成功",
@@ -103,6 +110,13 @@ export default {
             temp = null;
             return output;
         },
+        async getNotes() {
+            const res = await getNotes()
+            this.minutes = res.data
+        }
+    },
+    created() {
+        this.getNotes();
     },
 }
 </script>

@@ -28,6 +28,7 @@
 import { Toolbar, Editor } from "@wangeditor/editor-for-vue";
 import '@wangeditor/editor/dist/css/style.css'
 import { shallowRef } from "vue";
+import { getNote, updateNote } from "../api/note";
 
 export default {
     components: {
@@ -39,7 +40,7 @@ export default {
             editor: null,
             toolbarConfig: {},
             editorConfig: { autoFocus: false },
-            note: { title: '', content: '', visible: null },
+            note: { id: null, title: '', content: '', visible: null },
             rules: {
                 title: [
                     { required: true, message: '请输入标题', trigger: 'blur' },
@@ -60,12 +61,20 @@ export default {
             this.editor = shallowRef(editor)
         },
         submit() {
-            this.$refs.form.validate((v) => {
+            this.$refs.form.validate(async (v) => {
                 if (v) {
+                    await updateNote(this.note.id, this.note)
                     this.$router.push('/notes')
                 }
             })
         },
+        async getNote() {
+            const res = await getNote(this.$route.params.id)
+            this.note = res.data
+        }
+    },
+    created() {
+        this.getNote();
     },
 }
 </script>
