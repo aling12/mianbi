@@ -27,7 +27,7 @@
         </el-table-column>
     </el-table>
     <el-pagination style="margin-top: 5px;" background layout="->,prev, pager, next" :total="total"
-        v-model:current-page="query.page" :page-size="query.perPage" @current-change="handleChangePageInfo" />
+        v-model:current-page="query.page" v-model:page-size="query.perPage" @current-change="handleChangePageInfo" />
 </template>
 
 <script>
@@ -120,11 +120,11 @@ export default {
             this.total = res.data.total
         },
         handleChangePageInfo() {
-            this.getUsers();
+            this.getNotes();
         },
-        async inquire() {
-            const res = await getNotes(this.query)
-            this.minutes = res.data.data
+        inquire() {
+            this.query.page = 1
+            this.getNotes()
         }
     },
     created() {

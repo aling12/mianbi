@@ -2,8 +2,7 @@
     <div>
         <div>标题：{{ note.title }}</div>
         <div class="content">
-            <span>内容：</span>
-            <div v-html="note.content"></div>
+            内容：<div v-html="note.content"></div>
         </div>
         <div>类型：{{ note.visible === true ? '公开' : '私密' }}</div>
     </div>
@@ -34,5 +33,6 @@ export default {
 <style scoped>
 .content {
     display: flex;
+    align-items: center;
 }
 </style>

@@ -7,7 +7,7 @@
       </el-select>
       <div class="block">
         <el-form-item label="开始时间">
-          <el-date-picker v-model="query.startDate" type="datetime" placeholder="请选择查询时间" clearable />
+          <el-date-picker v-model="query.startDate"  placeholder="请选择查询时间" clearable />
         </el-form-item>
       </div>
       <el-button @click="inquire" class="primary-btn" type="primary">查询</el-button>
@@ -56,7 +56,7 @@
     </el-table>
     <div class="pagination">
       <el-pagination background layout="prev, pager, next" :total="total" v-model:current-page="query.page"
-        :page-size="query.perPage" @current-change="handleChangePageInfo" />
+        v-model:page-size="query.perPage" @current-change="handleChangePageInfo" />
     </div>
 
     <el-dialog width="340px" v-model="dialogVisible" title="添加面壁者">
@@ -320,6 +320,7 @@ export default {
       this.getUsers();
     },
     async inquire() {
+      this.query.page = 1
       const startDate = this.query.startDate ? this.formatDate(this.query.startDate) : ''
       const res = await getUsers({ ...this.query, startDate })
       this.users = res.data.data

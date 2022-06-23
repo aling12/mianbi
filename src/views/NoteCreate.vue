@@ -2,7 +2,7 @@
     <div>
         <el-form label-width="auto" :model="note" :rules="rules" ref="form">
             <el-form-item label="标题" prop="title">
-                <el-input v-model="note.title"></el-input>
+                <el-input v-model="note.title" autofocus></el-input>
             </el-form-item>
             <el-form-item label="内容" prop="content">
                 <div>
@@ -49,7 +49,7 @@ export default {
                 ],
                 content: [
                     { required: true, message: '请输入内容', trigger: 'blur' },
-                    { min: 10, message: '至少10个字以上', trigger: 'blur' }
+                    { min: 10, max: 10000, message: '至少10个字以上', trigger: 'blur' }
                 ],
                 visible: [
                     { required: true, message: '请选择是否可见', trigger: 'blur' },
