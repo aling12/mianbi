@@ -7,7 +7,7 @@
       </el-select>
       <div class="block">
         <el-form-item label="开始时间">
-          <el-date-picker v-model="query.startDate"  placeholder="请选择查询时间" clearable />
+          <el-date-picker v-model="query.startDate" placeholder="请选择查询时间" clearable />
         </el-form-item>
       </div>
       <el-button @click="inquire" class="primary-btn" type="primary">查询</el-button>
@@ -333,6 +333,14 @@ export default {
   },
   created() {
     this.getUsers();
+  },
+  watch: {
+    'query.type'() {
+      this.inquire()
+    },
+    'query.startDate'() {
+      this.inquire()
+    }
   },
 };
 </script>

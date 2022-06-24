@@ -125,7 +125,7 @@ export default {
         inquire() {
             this.query.page = 1
             this.getNotes()
-        }
+        }   
     },
     created() {
         this.getNotes();

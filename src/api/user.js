@@ -1,10 +1,31 @@
 import request from "../utils/request";
 
+import router from '../router';
+
+
+export function login(data) {
+  return request({
+    method: 'POST',
+    url: '/auth/login',
+    data,
+  })
+}
+
 export function getUsers(params = {}) {
+  const token = localStorage.getItem('token')
+
   return request({
     method: "GET",
     url: "/users",
     params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }).catch((err) => {
+    if (err.response.status === 401) {
+      return router.replace('/')
+    }
+    throw err
   });
 }
 

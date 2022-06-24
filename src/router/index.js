@@ -16,6 +16,7 @@ const router = createRouter({
     {
       path: "/",
       component: LoginPages,
+      meta: { authRequired: false },
     },
     {
       path: "/review",
@@ -57,5 +58,16 @@ const router = createRouter({
     },
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.authRequired === false) {
+    return next()
+  }
+  const token = localStorage.getItem('token')
+  if (token) {
+    return next()
+  }
+  next('/')
+})
 
 export default router;
