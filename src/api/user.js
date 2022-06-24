@@ -12,21 +12,12 @@ export function login(data) {
 }
 
 export function getUsers(params = {}) {
-  const token = localStorage.getItem('token')
 
   return request({
     method: "GET",
     url: "/users",
     params,
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  }).catch((err) => {
-    if (err.response.status === 401) {
-      return router.replace('/')
-    }
-    throw err
-  });
+  })
 }
 
 export function getUser(id) {
